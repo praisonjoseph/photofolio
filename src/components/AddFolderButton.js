@@ -1,5 +1,7 @@
 import React from 'react'
 import { Button, Form, Modal } from 'react-bootstrap'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {faFolderPlus} from '@fortawesome/free-solid-svg-icons'
 import { useState } from 'react';
 import { database } from '../firebase';
 import { addDoc, serverTimestamp } from "firebase/firestore"; 
@@ -21,14 +23,13 @@ export default function AddFolderButton() {
             name: name,
             createdAt: serverTimestamp()
           });
-
         setName("")
         closeModal()
     }
   return (
     <>
-    <Button onClick={openModal} variant='dark' size='lg' className='m-4'>
-        {/* <FontAwesomeIcon icon={faFolderPlus} /> */}
+    <Button onClick={openModal} variant='dark' size='lg' className='my-4 mx-2'>
+        <FontAwesomeIcon style={{paddingRight:'10px'}} icon={faFolderPlus} />
         Add Album
     </Button>
     <Modal show={open} onHide={closeModal}>

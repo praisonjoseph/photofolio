@@ -1,24 +1,21 @@
 import React from 'react'
 import NavbarComponent from './Navbar'
-import AddFolderButton from './AddFolderButton'
-import { useAlbum } from '../hooks/useAlbum'
-import Album from './Album'
-export default function Dashboard() {
-const {folderNames, loading}  = useAlbum()
-console.log(folderNames)
-  return (
-    <div>
-        <NavbarComponent />
-        <AddFolderButton /> 
-        <div className="d-flex flex-wrap">
-        {folderNames.length > 0 && folderNames.map(childFolder => (
-              <div key={childFolder.id} style={{ maxWidth: '250px' }} className="p-2">
-                <Album folder={childFolder} />
-              </div>
-            )
-          )}
-        </div>
+import AlbumList from './AlbumList'
+import { useParams } from 'react-router-dom'
+import ImageList from './ImageList'
+import { useLocation } from 'react-router-dom'
 
-    </div>
-  )
+
+export default function Dashboard() {
+    const { albumId } = useParams()
+    const { state={} } = useLocation()
+    console.log(albumId, state)
+    
+    // const albumId = 1
+    return (
+        <div>
+            <NavbarComponent />
+            {albumId ? <ImageList albumId={albumId} album={state && state.album} />: <AlbumList />}
+        </div>
+    )
 }
