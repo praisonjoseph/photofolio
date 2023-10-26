@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Carousel } from 'react-bootstrap';
 
-function ModalCarousel({ images, show, onHide, initialIndex }) {
+function ModalCarousel({ images, show, closeCarouselModal, initialIndex }) {
   const imageStyle = {
     objectFit: 'contain', // Maintain aspect ratio and fit the entire image
     width: '100%',
@@ -9,7 +9,7 @@ function ModalCarousel({ images, show, onHide, initialIndex }) {
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="lg">
+    <Modal show={show} onHide={closeCarouselModal} size="lg">
       <Modal.Header closeButton />
       <Modal.Body>
         <Carousel variant='dark' interval={null} defaultActiveIndex={initialIndex}>

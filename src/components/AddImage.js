@@ -1,21 +1,32 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import { database, storage } from '../firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { addDoc, serverTimestamp } from "firebase/firestore";
 import { Button, Form, Modal } from 'react-bootstrap'
+import { doc, getDoc } from "firebase/firestore";
 
-export default function AddImage({ albumId, album }) {
-  const [open, setOpen] = useState(false)
+export default function AddImage({ openimage, setOpenImage, album, albumId, imageId }) {
+
   const [name, setName] = useState('')
   const [file, setFile] = useState(null)
-  // console.log(file)
-  const openModal = () => {
-    setOpen(true)
+  // console.log(name)
+  // console.log(album, albumId)
+  const getSingleImage = async () => {
+    const docRef = doc(database.images, imageId)
+    const snapshot = await getDoc(docRef)
+    if (snapshot.exists()) {
+      setName(snapshot.data().name)
+      console.log(snapshot.data().name)
+    }
   }
+  useEffect(() => {
+    imageId && getSingleImage()
+  }, [imageId])
+
   const closeModal = () => {
-    setOpen(false)
+    setOpenImage(false)
     setFile(null)
     setName('')
   }
@@ -51,7 +62,7 @@ export default function AddImage({ albumId, album }) {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           console.log('File available at', downloadURL);
           await addDoc(database.images, {
-            name: file.name,
+            name: name,
             albumId: album.id,
             url: downloadURL,
             createdAt: serverTimestamp()
@@ -64,38 +75,32 @@ export default function AddImage({ albumId, album }) {
     closeModal()
   }
   return (
+    <Modal show={openimage} onHide={closeModal}>
+      <Form onSubmit={handleSubmit}>
+        <Modal.Body>
+          <h2> {!imageId ? "Add Image": "Edit Image"}</h2>
+          <Form.Group>
+            <Form.Label>Image Name</Form.Label>
+            <Form.Control type='text' required value={name} onChange={(e) => setName(e.target.value)}></Form.Control>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label className='btn btn-outline-dark btn-md my-2'>
+              <FontAwesomeIcon style={{ paddingRight: '10px' }} icon={faFileUpload} />Upload Image
+              <Form.Control
+                type="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                style={{ opacity: 0, position: 'absolute', left: "-9999px" }}
+              />
+            </Form.Label>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant='secondary' size="lg" onClick={closeModal} >Close</Button>
+          <Button variant="dark" size="lg" onClick={() => setName("")}>Clear</Button>
+          <Button variant="dark" type="submit" size="lg">Submit</Button>
+        </Modal.Footer>
 
-    <div className='ms-auto'>
-      <Button onClick={openModal} variant='btn btn-outline-dark' size='lg' className='my-4 mx-2'>
-        <FontAwesomeIcon style={{ paddingRight: '10px' }} icon={faFileUpload} />
-        Add Image
-      </Button>
-      <Modal show={open} onHide={closeModal}>
-        <Form onSubmit={handleSubmit}>
-          <Modal.Body>
-            <Form.Group>
-              <Form.Label>Image Name</Form.Label>
-              <Form.Control type='text' required value={name} onChange={e => setName(e.target.value)}></Form.Control>
-            </Form.Group>
-            <Form.Group>
-              <Form.Label className='btn btn-outline-dark btn-md my-2'>
-                <FontAwesomeIcon style={{ paddingRight: '10px' }} icon={faFileUpload} />Upload Image
-                <Form.Control
-                  type="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ opacity: 0, position: 'absolute', left: "-9999px" }}
-                />
-              </Form.Label>
-            </Form.Group>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant='secondary' size="lg" onClick={closeModal} >Close</Button>
-            <Button variant="dark" size="lg" onClick={() => setName("")}>Clear</Button>
-            <Button variant="dark" type="submit" size="lg">Submit</Button>
-          </Modal.Footer>
-
-        </Form>
-      </Modal>
-    </div>
+      </Form>
+    </Modal>
   )
 }

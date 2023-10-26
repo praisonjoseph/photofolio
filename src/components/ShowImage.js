@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import EditImage from "../images/edit.png";
 import DeleteImage from "../images/trash-bin.png";
 import styles from "./ShowImage.module.css"
-import AddImage from './AddImage';
-export default function ShowImage({image, index, setSelectedImageIndex, setShowModal, albumId, album}) {
+import { Button } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+
+export default function ShowImage({ image, index, setSelectedImageIndex, setShowModal, albumId, album, openAddImageModal }) {
     const [currentHoverIndex, setcurrentHoverIndex] = useState(null);
     const imageNameWithoutExtension = image['name'].split('.').slice(0, -1).join();
 
@@ -11,11 +13,11 @@ export default function ShowImage({image, index, setSelectedImageIndex, setShowM
 
     };
 
-    const handleEditClick = () => {
+    const handleEditClick = (imageId) => {
         console.log("clicked")
-        return(
-        <AddImage albumId={albumId} album={album} />
-        )
+
+        // <AddImage albumId={albumId} album={album} />
+
     };
     const imageStyles = {
         border: '1px solid #ccc',
@@ -45,12 +47,24 @@ export default function ShowImage({image, index, setSelectedImageIndex, setShowM
             }}
         >
             <div className={`${styles.buttonGroup} ${currentHoverIndex === image.id && styles.active}`}  >
-                <div className={styles.edit} onClick={() => handleEditClick(image.id)}>
+                {/* <div className={styles.edit} onClick={() => handleEditClick(image.id)}>
                     <img src={EditImage} height="100%" alt="Edit" />
                 </div>
                 <div className={styles.delete} onClick={() => handleDelete(image.id)}>
                     <img src={DeleteImage} height="100%" alt="Delete" />
-                </div>
+                </div> */}
+                <Link 
+                className={styles.edit} 
+                onClick={() => openAddImageModal(image.id)}
+                to={`/album/${album.id}`}
+                state={{album}}
+                as={Link}
+                >
+                    <img src={EditImage} height="100%" alt="Edit" />
+                </Link>
+                <Link className={styles.delete} onClick={() => handleDelete(image.id)}>
+                    <img src={DeleteImage} height="100%" alt="Delete" />
+                </Link>
             </div>
             <img
                 key={index}
@@ -62,7 +76,7 @@ export default function ShowImage({image, index, setSelectedImageIndex, setShowM
                 style={{ objectFit: 'contain' }}
             />
             <p>
-                {imageNameWithoutExtension}
+                {image.name}
             </p>
         </div>
     )
