@@ -12,14 +12,14 @@ function ModalCarousel({ images, show, onHide, initialIndex }) {
     <Modal show={show} onHide={onHide} size="lg">
       <Modal.Header closeButton />
       <Modal.Body>
-        <Carousel variant='dark' interval={500} defaultActiveIndex={initialIndex}>
+        <Carousel variant='dark' interval={null} defaultActiveIndex={initialIndex}>
           {images.map((image, index) => (
             <Carousel.Item key={index}>
               <img 
               src={image.url} 
-              alt={`Image ${image.id}`} 
+              alt={`${image.id}`} 
               width="200" 
-              height="400" 
+              height="300" 
               className="d-block w-100" 
               style={imageStyle}
               />

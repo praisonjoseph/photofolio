@@ -26,7 +26,8 @@ export const useAlbum = (albumId = null) => {
       };
   
       fetchFolderNames();
-    }, []);
+    }, [albumId]);
+
     useEffect(() => {
       // Firebase code to fetch folder names
       const fetchImages = () => {
@@ -46,7 +47,7 @@ export const useAlbum = (albumId = null) => {
       };
   
       fetchImages();
-    }, []);
+    }, [albumId]);
 
   
     return { folderNames, images, loading };
