@@ -3,37 +3,42 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import { database, storage } from '../firebase';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { addDoc, serverTimestamp } from "firebase/firestore";
-import { Button, Form, Modal } from 'react-bootstrap'
-import { doc, getDoc } from "firebase/firestore";
+import { addDoc, getDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
+import { Button, Form, Modal, Row, Col, Alert } from 'react-bootstrap'
 
 export default function AddImage({ openimage, setOpenImage, album, albumId, imageId }) {
 
   const [name, setName] = useState('')
   const [file, setFile] = useState(null)
-  // console.log(name)
-  // console.log(album, albumId)
+  const [error, setError] = useState('')
+
   const getSingleImage = async () => {
     const docRef = doc(database.images, imageId)
     const snapshot = await getDoc(docRef)
     if (snapshot.exists()) {
-      setName(snapshot.data().name)
-      console.log(snapshot.data().name)
+      const image = snapshot.data()
+      setName(image.name)
     }
   }
   useEffect(() => {
     imageId && getSingleImage()
-  }, [imageId])
+  })
 
   const closeModal = () => {
     setOpenImage(false)
     setFile(null)
     setName('')
+    setError('')
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     // Create a album in the database
-    if (albumId == null || file == null) return
+    if (albumId == null || file == null) {
+      setError("Please select a file to upload")
+      return
+    }
+    // const fileName = file.name + new Date().getTime()
     const storageRef = ref(storage, `/images/${album.name}/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on('state_changed',
@@ -58,16 +63,31 @@ export default function AddImage({ openimage, setOpenImage, album, albumId, imag
       },
       () => {
         // Handle successful uploads on complete
-        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-          console.log('File available at', downloadURL);
-          await addDoc(database.images, {
-            name: name,
-            albumId: album.id,
-            url: downloadURL,
-            createdAt: serverTimestamp()
-          });
-        });
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then(async (downloadURL) => {
+            console.log('File available at', downloadURL);
+            if (!imageId) {
+              await addDoc(database.images, {
+                name: name,
+                albumId: album.id,
+                url: downloadURL,
+                createdAt: serverTimestamp()
+              });
+
+            } else {
+              const docRef = doc(database.images, imageId)
+              await updateDoc(docRef, {
+                name: name,
+                albumId: album.id,
+                url: downloadURL,
+                createdAt: serverTimestamp()
+              });
+            }
+
+          })
+          .catch(error => {
+            console.log('Error updating database ', error);
+          })
       }
     );
     setName("")
@@ -77,11 +97,18 @@ export default function AddImage({ openimage, setOpenImage, album, albumId, imag
   return (
     <Modal show={openimage} onHide={closeModal}>
       <Form onSubmit={handleSubmit}>
+        <Modal.Header>
+          <h2> {!imageId ? "Add Image" : "Edit Image"}</h2>
+        </Modal.Header>
         <Modal.Body>
-          <h2> {!imageId ? "Add Image": "Edit Image"}</h2>
-          <Form.Group>
-            <Form.Label>Image Name</Form.Label>
-            <Form.Control type='text' required value={name} onChange={(e) => setName(e.target.value)}></Form.Control>
+          {error && <Alert variant='danger'>{error}</Alert>}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm="2">
+              Name
+            </Form.Label>
+            <Col sm="10">
+              <Form.Control type="text" required value={name} placeholder="Image Name" onChange={(e) => setName(e.target.value)} />
+            </Col>
           </Form.Group>
           <Form.Group>
             <Form.Label className='btn btn-outline-dark btn-md my-2'>
@@ -97,9 +124,8 @@ export default function AddImage({ openimage, setOpenImage, album, albumId, imag
         <Modal.Footer>
           <Button variant='secondary' size="lg" onClick={closeModal} >Close</Button>
           <Button variant="dark" size="lg" onClick={() => setName("")}>Clear</Button>
-          <Button variant="dark" type="submit" size="lg">Submit</Button>
+          <Button variant="dark" type="submit" size="lg">{imageId ? "Update Image" : "Submit"} </Button>
         </Modal.Footer>
-
       </Form>
     </Modal>
   )

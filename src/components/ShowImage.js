@@ -2,22 +2,20 @@ import React, { useState } from 'react'
 import EditImage from "../images/edit.png";
 import DeleteImage from "../images/trash-bin.png";
 import styles from "./ShowImage.module.css"
-import { Button } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { doc, deleteDoc } from "firebase/firestore";
+import { database } from '../firebase';
 
 export default function ShowImage({ image, index, setSelectedImageIndex, setShowModal, albumId, album, openAddImageModal }) {
     const [currentHoverIndex, setcurrentHoverIndex] = useState(null);
-    const imageNameWithoutExtension = image['name'].split('.').slice(0, -1).join();
 
-    const handleDelete = () => {
-
+    const handleDelete = async (imageId) => {
+        await deleteDoc(doc(database.images, imageId));
     };
 
     const handleEditClick = (imageId) => {
         console.log("clicked")
-
-        // <AddImage albumId={albumId} album={album} />
-
+        openAddImageModal(image.id)
     };
     const imageStyles = {
         border: '1px solid #ccc',
@@ -47,22 +45,21 @@ export default function ShowImage({ image, index, setSelectedImageIndex, setShow
             }}
         >
             <div className={`${styles.buttonGroup} ${currentHoverIndex === image.id && styles.active}`}  >
-                {/* <div className={styles.edit} onClick={() => handleEditClick(image.id)}>
-                    <img src={EditImage} height="100%" alt="Edit" />
-                </div>
-                <div className={styles.delete} onClick={() => handleDelete(image.id)}>
-                    <img src={DeleteImage} height="100%" alt="Delete" />
-                </div> */}
-                <Link 
-                className={styles.edit} 
-                onClick={() => openAddImageModal(image.id)}
-                to={`/album/${album.id}`}
-                state={{album}}
-                as={Link}
+                <Link
+                    className={styles.edit}
+                    onClick={() => handleEditClick(image.id)}
+                    to={`/album/${album.id}`}
+                    state={{ album }}
+                    as={Link}
                 >
                     <img src={EditImage} height="100%" alt="Edit" />
                 </Link>
-                <Link className={styles.delete} onClick={() => handleDelete(image.id)}>
+                <Link
+                    className={styles.delete}
+                    onClick={() => handleDelete(image.id)}
+                    to={`/album/${album.id}`}
+                    state={{ album }}
+                >
                     <img src={DeleteImage} height="100%" alt="Delete" />
                 </Link>
             </div>

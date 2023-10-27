@@ -14,12 +14,12 @@ export default function NavbarComponent() {
       <Navbar.Brand as={Link} to="/" style={navbarBrandStyles}>
         <img
           alt=""
-          src="/photoalbum.png"
+          src="/logo.png"
           width="50"
           height="50"
-          style={{mixBlendMode: 'multiply', filter: 'contrast(1)', marginLeft: '10px'}}
+          style={{marginLeft: '10px'}}
         />
-        <span className="fw-bold" style={{marginLeft: '10px'}}>PhotoFolio</span>
+        <span className="fw-bold text-dark" style={{marginLeft: '10px'}}>PhotoFolio</span>
       </Navbar.Brand>
   </Navbar>
 

@@ -2,11 +2,6 @@ import React from 'react';
 import { Modal, Carousel } from 'react-bootstrap';
 
 function ModalCarousel({ images, show, closeCarouselModal, initialIndex }) {
-  const imageStyle = {
-    objectFit: 'contain', // Maintain aspect ratio and fit the entire image
-    width: '100%',
-    height: '100%',
-  };
 
   return (
     <Modal show={show} onHide={closeCarouselModal} size="lg">
@@ -18,10 +13,10 @@ function ModalCarousel({ images, show, closeCarouselModal, initialIndex }) {
               <img 
               src={image.url} 
               alt={`${image.id}`} 
-              width="200" 
-              height="300" 
+              width="300" 
+              height="400" 
               className="d-block w-100" 
-              style={imageStyle}
+              style={{objectFit: 'contain'}}
               />
             </Carousel.Item>
           ))}
