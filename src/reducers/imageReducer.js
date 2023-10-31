@@ -1,8 +1,3 @@
-// export const initialImageState = {
-//     selectedImageIndex: 0,
-//     openAddImage: false,
-// };
-
 export const initialImageState = {
     images: [],
     imageloading: true,
