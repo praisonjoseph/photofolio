@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import AddEditmage from '../components/AddEditImage'
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { Button, Stack, Form, Spinner } from 'react-bootstrap'
-import { useAlbum } from '../hooks/useAlbum'
 import { useImage } from '../hooks/useImage'
 import ModalCarousel from '../components/ModalCarousel'
 import ShowImage from '../components/ShowImage'
@@ -17,24 +16,14 @@ export default function ImageList() {
     const album = state.album
 
     const {
-        openAddimage, 
         setOpenAddImage, 
-        selectedImageIndex, 
-        setSelectedImageIndex,
-        imageId,
         setImageId,
-        showCarouselModal,
         setShowCarouselModal,
         searchTerm,
         setSearchTerm, 
         images, 
         imageloading
             } = useImage(albumId)
-    // const [showCarouselModal, setShowCarouselModal] = useState(false);
-    // const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-    // const [openAddimage, setOpenAddImage] = useState(false)
-    // const [imageId, setImageId] = useState(null)
-    // const [searchTerm, setSearchTerm] = useState('');
     const openAddImageModal = (imageId = null) => {
         console.log(imageId)
         setImageId(imageId)
@@ -48,6 +37,7 @@ export default function ImageList() {
     const filteredImages = images.filter((image) =>
         image.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
 
     return (
         <div>
@@ -82,11 +72,8 @@ export default function ImageList() {
             </Stack>
 
             <AddEditmage
-                openimage={openAddimage}
-                setOpenImage={setOpenAddImage}
                 album={album}
                 albumId={albumId}
-                imageId={imageId}
             />
             {!searchTerm ? (
                 <div className="d-flex flex-wrap m-3">
@@ -95,8 +82,6 @@ export default function ImageList() {
                             key={image.id}
                             image={image}
                             index={index}
-                            setSelectedImageIndex={setSelectedImageIndex}
-                            setShowModal={setShowCarouselModal}
                             albumId={albumId}
                             album={album}
                             openAddImageModal={openAddImageModal}
@@ -111,8 +96,6 @@ export default function ImageList() {
                             key={image.id}
                             image={image}
                             index={index}
-                            setSelectedImageIndex={setSelectedImageIndex}
-                            setShowModal={setShowCarouselModal}
                             albumId={albumId}
                             album={album}
                             openAddImageModal={openAddImageModal}
@@ -122,10 +105,8 @@ export default function ImageList() {
             )}
 
             < ModalCarousel
-                images={images}
-                show={showCarouselModal}
+                albumId={albumId}
                 closeCarouselModal={closeCarouselModal}
-                initialIndex={selectedImageIndex}
             />
             </div>
             )}

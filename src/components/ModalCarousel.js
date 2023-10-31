@@ -1,13 +1,19 @@
 import React from 'react';
 import { Modal, Carousel } from 'react-bootstrap';
+import { useImage } from '../hooks/useImage'
 
-function ModalCarousel({ images, show, closeCarouselModal, initialIndex }) {
+function ModalCarousel({albumId, closeCarouselModal }) {
+  const {
+    images,
+    selectedImageIndex, 
+    showCarouselModal
+  } = useImage(albumId)
 
   return (
-    <Modal show={show} onHide={closeCarouselModal} size="lg">
+    <Modal show={showCarouselModal} onHide={closeCarouselModal} size="lg">
       <Modal.Header closeButton />
       <Modal.Body>
-        <Carousel variant='dark' interval={null} defaultActiveIndex={initialIndex}>
+        <Carousel variant='dark' interval={null} defaultActiveIndex={selectedImageIndex}>
           {images.map((image, index) => (
             <Carousel.Item key={index}>
               <img 

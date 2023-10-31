@@ -15,8 +15,6 @@ import { imageListReducer,
 
 export const useImage = (albumId = null) => {
 
-  // const [images, setImages] = useState([]);
-  // const [imageloading, setImageLoading] = useState(true);
   const [state, dispatch] = useReducer(imageListReducer, initialImageState);
 
   useEffect(() => {
@@ -66,8 +64,6 @@ export const useImage = (albumId = null) => {
     dispatch({ type: SET_SEARCH_TERM, payload: value });
   }
   return {...state, 
-    // images,
-    // imageloading,
     setSelectedImageIndex,
     setOpenAddImage,
     setImageId,

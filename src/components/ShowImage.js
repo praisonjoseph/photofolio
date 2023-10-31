@@ -5,10 +5,11 @@ import styles from "./ShowImage.module.css"
 import { Link } from 'react-router-dom'
 import { doc, deleteDoc } from "firebase/firestore";
 import { database } from '../firebase';
+import { useImage } from '../hooks/useImage'
 
-export default function ShowImage({ image, index, setSelectedImageIndex, setShowModal, albumId, album, openAddImageModal }) {
+export default function ShowImage({ image, index, albumId, album, openAddImageModal }) {
     const [currentHoverIndex, setcurrentHoverIndex] = useState(null);
-
+    const {setSelectedImageIndex, setShowCarouselModal } = useImage(albumId)
     const handleDelete = async (imageId) => {
         await deleteDoc(doc(database.images, imageId));
     };
@@ -29,7 +30,7 @@ export default function ShowImage({ image, index, setSelectedImageIndex, setShow
 
     const openModal = (index) => {
         setSelectedImageIndex(index);
-        setShowModal(true);
+        setShowCarouselModal(true);
     };
 
 
