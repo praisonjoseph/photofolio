@@ -3,6 +3,7 @@ import AddEditmage from '../components/AddEditImage'
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { Button, Stack, Form, Spinner } from 'react-bootstrap'
 import { useAlbum } from '../hooks/useAlbum'
+import { useImage } from '../hooks/useImage'
 import ModalCarousel from '../components/ModalCarousel'
 import ShowImage from '../components/ShowImage'
 import NavbarComponent from '../components/Navbar'
@@ -15,17 +16,23 @@ export default function ImageList() {
     const { state = {} } = useLocation()
     const album = state.album
 
-    const { images, imageloading } = useAlbum(albumId)
+    const {
+        openAddimage, 
+        setOpenAddImage, 
+        selectedImageIndex, 
+        setSelectedImageIndex, 
+        images, 
+        imageloading} = useImage(albumId)
     const [showCarouselModal, setShowCarouselModal] = useState(false);
-    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-    const [openimage, setOpenImage] = useState(false)
+    // const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+    // const [openAddimage, setOpenAddImage] = useState(false)
     const [imageId, setImageId] = useState(null)
     const [searchTerm, setSearchTerm] = useState('');
 
     const openAddImageModal = (imageId = null) => {
         console.log(imageId)
         setImageId(imageId)
-        setOpenImage(true)
+        setOpenAddImage(true)
     }
 
     const closeCarouselModal = () => {
@@ -69,8 +76,8 @@ export default function ImageList() {
             </Stack>
 
             <AddEditmage
-                openimage={openimage}
-                setOpenImage={setOpenImage}
+                openimage={openAddimage}
+                setOpenImage={setOpenAddImage}
                 album={album}
                 albumId={albumId}
                 imageId={imageId}

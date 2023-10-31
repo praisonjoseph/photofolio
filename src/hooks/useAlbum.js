@@ -4,9 +4,7 @@ import { database } from '../firebase';
 
 export const useAlbum = (albumId = null) => {
   const [folderNames, setFolderNames] = useState([]);
-  const [images, setImages] = useState([]);
   const [albumloading, setAlbumLoading] = useState(true);
-  const [imageloading, setImageLoading] = useState(true);
 
   useEffect(() => {
     // Firebase code to fetch folder names
@@ -14,7 +12,7 @@ export const useAlbum = (albumId = null) => {
       try {
         // const q = query(database.album, orderBy("createdAt"))
         const q = query(database.album)
-        const unsub = onSnapshot(q, (querySnapshot) => {
+        onSnapshot(q, (querySnapshot) => {
           const names = querySnapshot.docs.map(database.formattedDoc)
           setFolderNames(names);
           setAlbumLoading(false);
@@ -28,30 +26,9 @@ export const useAlbum = (albumId = null) => {
     };
 
     fetchFolderNames();
-  }, [albumId]);
-
-  useEffect(() => {
-    // Firebase code to fetch folder names
-    const fetchImages = () => {
-      try {
-        // const q = query(database.images, where("albumId", "==", albumId), orderBy("createdAt"))
-        const q = query(database.images, where("albumId", "==", albumId))
-        const unsub2 = onSnapshot(q, (querySnapshot) => {
-          const images = querySnapshot.docs.map(database.formattedDoc)
-          setImages(images);
-          // console.log(images)
-          setImageLoading(false);
-        });
-        
-      } catch (error) {
-        console.error('Error fetching folder names:', error);
-        setImageLoading(false);
-      }
-    };
-
-    fetchImages();
-  }, [albumId]);
+  }, []);
 
 
-  return { folderNames, images, albumloading, imageloading };
+
+  return { folderNames, albumloading };
 };

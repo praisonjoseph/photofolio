@@ -22,7 +22,7 @@ export default function AddImage({ openimage, setOpenImage, album, albumId, imag
   }
   useEffect(() => {
     imageId && getSingleImage()
-  })
+  },[imageId])
 
   const closeModal = () => {
     setOpenImage(false)

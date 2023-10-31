@@ -15,7 +15,7 @@ export default function ShowImage({ image, index, setSelectedImageIndex, setShow
 
     const handleEditClick = (imageId) => {
         console.log("clicked")
-        openAddImageModal(image.id)
+        openAddImageModal(imageId)
     };
     const imageStyles = {
         border: '1px solid #ccc',
