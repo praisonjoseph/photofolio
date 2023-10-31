@@ -20,15 +20,21 @@ export default function ImageList() {
         openAddimage, 
         setOpenAddImage, 
         selectedImageIndex, 
-        setSelectedImageIndex, 
+        setSelectedImageIndex,
+        imageId,
+        setImageId,
+        showCarouselModal,
+        setShowCarouselModal,
+        searchTerm,
+        setSearchTerm, 
         images, 
-        imageloading} = useImage(albumId)
-    const [showCarouselModal, setShowCarouselModal] = useState(false);
+        imageloading
+            } = useImage(albumId)
+    // const [showCarouselModal, setShowCarouselModal] = useState(false);
     // const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     // const [openAddimage, setOpenAddImage] = useState(false)
-    const [imageId, setImageId] = useState(null)
-    const [searchTerm, setSearchTerm] = useState('');
-
+    // const [imageId, setImageId] = useState(null)
+    // const [searchTerm, setSearchTerm] = useState('');
     const openAddImageModal = (imageId = null) => {
         console.log(imageId)
         setImageId(imageId)
