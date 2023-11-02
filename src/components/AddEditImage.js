@@ -8,8 +8,8 @@ import { Button, Form, Modal, Row, Col, Alert } from 'react-bootstrap'
 import { useImage } from '../hooks/useImage'
 
 export default function AddImage({ album, albumId, 
-              // openAddimage, 
-              // setOpenAddImage,
+              openAddimage, 
+              setOpenAddImage,
               imageId
   }) {
 
@@ -17,8 +17,8 @@ export default function AddImage({ album, albumId,
   const [file, setFile] = useState(null)
   const [error, setError] = useState('')
   const {
-    openAddimage,
-    setOpenAddImage, 
+    // openAddimage,
+    // setOpenAddImage, 
     // imageId 
   } = useImage(albumId)
 
