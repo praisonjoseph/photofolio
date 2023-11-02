@@ -1,7 +1,7 @@
 export const initialImageState = {
     images: [],
     imageloading: true,
-    imageId: null,
+    // imageId: null,
     // selectedImageIndex: 0,
     // openAddimage: false,
     // showCarouselModal: false,
@@ -28,8 +28,8 @@ export const imageListReducer = (state, action) => {
         //     return { ...state, selectedImageIndex: action.payload };
         // case SET_SHOW_CAROUSEL_MODAL:
         //     return { ...state, showCarouselModal: action.payload };
-        case SET_IMAGE_ID:
-            return { ...state, imageId: action.payload };
+        // case SET_IMAGE_ID:
+        //     return { ...state, imageId: action.payload };
         case SET_SEARCH_TERM:
             return { ...state, searchTerm: action.payload };
         default:

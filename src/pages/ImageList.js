@@ -17,7 +17,7 @@ export default function ImageList() {
 
     const {
         // setOpenAddImage, 
-        setImageId,
+        // setImageId,
         // setShowCarouselModal,
         searchTerm,
         setSearchTerm, 
@@ -28,6 +28,7 @@ export default function ImageList() {
     const [openAddimage, setOpenAddImage] = useState(false)
     const [selectedImageIndex, setSelectedImageIndex] = useState(0)
     const [showCarouselModal, setShowCarouselModal] = useState(false)
+    const [imageId, setImageId] = useState(null)
     
     const openAddImageModal = (imageId = null) => {
         console.log(imageId)
@@ -81,6 +82,7 @@ export default function ImageList() {
                 albumId={albumId}
                 openAddimage = {openAddimage}
                 setOpenAddImage = {setOpenAddImage}
+                imageId ={imageId}
             />
             {!searchTerm ? (
                 <div className="d-flex flex-wrap m-3">

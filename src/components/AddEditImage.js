@@ -8,7 +8,8 @@ import { Button, Form, Modal, Row, Col, Alert } from 'react-bootstrap'
 import { useImage } from '../hooks/useImage'
 
 export default function AddImage({ album, albumId, openAddimage, 
-              setOpenAddImage 
+              setOpenAddImage,
+              imageId
   }) {
 
   const [name, setName] = useState('')
@@ -17,7 +18,8 @@ export default function AddImage({ album, albumId, openAddimage,
   const {
     // openAddimage,
     // setOpenAddImage, 
-    imageId } = useImage(albumId)
+    // imageId 
+  } = useImage(albumId)
 
   const getSingleImage = async () => {
     const docRef = doc(database.images, imageId)
@@ -28,7 +30,6 @@ export default function AddImage({ album, albumId, openAddimage,
     }
   }
   useEffect(() => {
-    console.log(imageId)
     imageId && getSingleImage()
   },[imageId])
 
