@@ -2,9 +2,9 @@ export const initialImageState = {
     images: [],
     imageloading: true,
     imageId: null,
-    selectedImageIndex: 0,
+    // selectedImageIndex: 0,
     // openAddimage: false,
-    showCarouselModal: false,
+    // showCarouselModal: false,
     searchTerm: '',
 };
 
@@ -24,10 +24,10 @@ export const imageListReducer = (state, action) => {
             return { ...state, imageloading: action.payload };
         // case SET_OPEN_ADD_IMAGE:
         //     return { ...state, openAddimage: action.payload };
-        case SET_SELECTED_IMAGE_INDEX:
-            return { ...state, selectedImageIndex: action.payload };
-        case SET_SHOW_CAROUSEL_MODAL:
-            return { ...state, showCarouselModal: action.payload };
+        // case SET_SELECTED_IMAGE_INDEX:
+        //     return { ...state, selectedImageIndex: action.payload };
+        // case SET_SHOW_CAROUSEL_MODAL:
+        //     return { ...state, showCarouselModal: action.payload };
         case SET_IMAGE_ID:
             return { ...state, imageId: action.payload };
         case SET_SEARCH_TERM:

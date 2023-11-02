@@ -18,7 +18,7 @@ export default function ImageList() {
     const {
         // setOpenAddImage, 
         setImageId,
-        setShowCarouselModal,
+        // setShowCarouselModal,
         searchTerm,
         setSearchTerm, 
         images, 
@@ -26,6 +26,8 @@ export default function ImageList() {
             } = useImage(albumId)
 
     const [openAddimage, setOpenAddImage] = useState(false)
+    const [selectedImageIndex, setSelectedImageIndex] = useState(0)
+    const [showCarouselModal, setShowCarouselModal] = useState(false)
     
     const openAddImageModal = (imageId = null) => {
         console.log(imageId)
@@ -90,6 +92,8 @@ export default function ImageList() {
                             albumId={albumId}
                             album={album}
                             openAddImageModal={openAddImageModal}
+                            setSelectedImageIndex = {setSelectedImageIndex}
+                            setShowCarouselModal = {setShowCarouselModal}
                         />
                     ))}
                 </div>
@@ -104,6 +108,8 @@ export default function ImageList() {
                             albumId={albumId}
                             album={album}
                             openAddImageModal={openAddImageModal}
+                            setSelectedImageIndex = {setSelectedImageIndex}
+                            setShowCarouselModal = {setShowCarouselModal}
                         />
                     ))}
                 </div>
@@ -112,6 +118,8 @@ export default function ImageList() {
             < ModalCarousel
                 albumId={albumId}
                 closeCarouselModal={closeCarouselModal}
+                showCarouselModal = {showCarouselModal}
+                selectedImageIndex = {selectedImageIndex}
             />
             </div>
             )}

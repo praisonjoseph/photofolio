@@ -7,9 +7,17 @@ import { doc, deleteDoc } from "firebase/firestore";
 import { database } from '../firebase';
 import { useImage } from '../hooks/useImage'
 
-export default function ShowImage({ image, index, albumId, album, openAddImageModal }) {
+export default function ShowImage({ 
+            image, index, albumId, album, openAddImageModal,
+            setSelectedImageIndex, 
+            setShowCarouselModal 
+    }) {
+        
     const [currentHoverIndex, setcurrentHoverIndex] = useState(null);
-    const {setSelectedImageIndex, setShowCarouselModal } = useImage(albumId)
+    const {
+        // setSelectedImageIndex, 
+        // setShowCarouselModal 
+    } = useImage(albumId)
     const handleDelete = async (imageId) => {
         await deleteDoc(doc(database.images, imageId));
     };

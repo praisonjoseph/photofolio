@@ -2,11 +2,14 @@ import React from 'react';
 import { Modal, Carousel } from 'react-bootstrap';
 import { useImage } from '../hooks/useImage'
 
-function ModalCarousel({albumId, closeCarouselModal }) {
+function ModalCarousel({albumId, closeCarouselModal, 
+                selectedImageIndex, 
+                showCarouselModal 
+              }) {
   const {
     images,
-    selectedImageIndex, 
-    showCarouselModal
+    // selectedImageIndex, 
+    // showCarouselModal
   } = useImage(albumId)
   console.log(showCarouselModal)
   return (
