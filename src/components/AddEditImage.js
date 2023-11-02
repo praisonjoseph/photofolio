@@ -7,12 +7,15 @@ import { addDoc, getDoc, updateDoc, doc, serverTimestamp } from "firebase/firest
 import { Button, Form, Modal, Row, Col, Alert } from 'react-bootstrap'
 import { useImage } from '../hooks/useImage'
 
-export default function AddImage({ album, albumId }) {
+export default function AddImage({ album, albumId, openAddimage, setOpenAddImage }) {
 
   const [name, setName] = useState('')
   const [file, setFile] = useState(null)
   const [error, setError] = useState('')
-  const {openAddimage, setOpenAddImage, imageId } = useImage(albumId)
+  const {
+    // openAddimage,
+    // setOpenAddImage, 
+    imageId } = useImage(albumId)
 
   const getSingleImage = async () => {
     const docRef = doc(database.images, imageId)
@@ -23,6 +26,7 @@ export default function AddImage({ album, albumId }) {
     }
   }
   useEffect(() => {
+    console.log(imageId)
     imageId && getSingleImage()
   },[imageId])
 

@@ -29,6 +29,7 @@ export default function ShowImage({ image, index, albumId, album, openAddImageMo
     };
 
     const openModal = (index) => {
+        console.log(index)
         setSelectedImageIndex(index);
         setShowCarouselModal(true);
     };

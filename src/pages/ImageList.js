@@ -16,7 +16,7 @@ export default function ImageList() {
     const album = state.album
 
     const {
-        setOpenAddImage, 
+        // setOpenAddImage, 
         setImageId,
         setShowCarouselModal,
         searchTerm,
@@ -24,6 +24,9 @@ export default function ImageList() {
         images, 
         imageloading
             } = useImage(albumId)
+
+    const [openAddimage, setOpenAddImage] = useState(false)
+    
     const openAddImageModal = (imageId = null) => {
         console.log(imageId)
         setImageId(imageId)
@@ -74,6 +77,8 @@ export default function ImageList() {
             <AddEditmage
                 album={album}
                 albumId={albumId}
+                openAddimage = {openAddimage}
+                setOpenAddImage = {setOpenAddImage}
             />
             {!searchTerm ? (
                 <div className="d-flex flex-wrap m-3">

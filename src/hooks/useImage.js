@@ -50,9 +50,9 @@ export const useImage = (albumId = null) => {
     dispatch({ type: SET_SELECTED_IMAGE_INDEX, payload: index });
   };
 
-  const setOpenAddImage = (isOpen) => {
-    dispatch({ type: SET_OPEN_ADD_IMAGE, payload: isOpen });
-  };
+  // const setOpenAddImage = (isOpen) => {
+  //   dispatch({ type: SET_OPEN_ADD_IMAGE, payload: isOpen });
+  // };
 
   const setImageId = (imageId) => {
     dispatch({ type: SET_IMAGE_ID, payload: imageId });
@@ -65,7 +65,7 @@ export const useImage = (albumId = null) => {
   }
   return {...state, 
     setSelectedImageIndex,
-    setOpenAddImage,
+    // setOpenAddImage,
     setImageId,
     setShowCarouselModal,
     setSearchTerm,
