@@ -16,7 +16,7 @@ export default function ImageList() {
     const album = state.album
 
     const {
-        // setOpenAddImage, 
+        setOpenAddImage, 
         // setImageId,
         // setShowCarouselModal,
         searchTerm,
@@ -25,7 +25,7 @@ export default function ImageList() {
         imageloading
             } = useImage(albumId)
 
-    const [openAddimage, setOpenAddImage] = useState(false)
+    // const [openAddimage, setOpenAddImage] = useState(false)
     const [selectedImageIndex, setSelectedImageIndex] = useState(0)
     const [showCarouselModal, setShowCarouselModal] = useState(false)
     const [imageId, setImageId] = useState(null)
@@ -80,8 +80,8 @@ export default function ImageList() {
             <AddEditmage
                 album={album}
                 albumId={albumId}
-                openAddimage = {openAddimage}
-                setOpenAddImage = {setOpenAddImage}
+                // openAddimage = {openAddimage}
+                // setOpenAddImage = {setOpenAddImage}
                 imageId ={imageId}
             />
             {!searchTerm ? (
