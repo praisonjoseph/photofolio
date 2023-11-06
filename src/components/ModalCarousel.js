@@ -6,11 +6,7 @@ function ModalCarousel({albumId, closeCarouselModal,
                 selectedImageIndex, 
                 showCarouselModal 
               }) {
-  const {
-    images,
-    // selectedImageIndex, 
-    // showCarouselModal
-  } = useImage(albumId)
+  const {images} = useImage(albumId)
   return (
     <Modal show={showCarouselModal} onHide={closeCarouselModal} size="lg">
       <Modal.Header closeButton />

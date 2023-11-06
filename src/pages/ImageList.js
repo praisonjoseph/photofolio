@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AddEditmage from '../components/AddEditImage'
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { Button, Stack, Form, Spinner } from 'react-bootstrap'
@@ -16,26 +16,30 @@ export default function ImageList() {
     const album = state.album
 
     const {
-        openAddimage,
-        setOpenAddImage, 
-        // setImageId,
-        // setShowCarouselModal,
-        searchTerm,
-        setSearchTerm, 
         images, 
         imageloading
             } = useImage(albumId)
 
-    // const [openAddimage, setOpenAddImage] = useState(false)
+    const [openAddimage, setOpenAddImage] = useState(false)
     const [selectedImageIndex, setSelectedImageIndex] = useState(0)
     const [showCarouselModal, setShowCarouselModal] = useState(false)
     const [imageId, setImageId] = useState(null)
+    const [searchTerm, setSearchTerm] = useState('')
     
     const openAddImageModal = (imageId = null) => {
-        console.log(imageId)
+        console.log(imageId, openAddimage)
         setImageId(imageId)
         setOpenAddImage(true)
     }
+
+    useEffect(() => {
+        if (openAddimage) {
+          // Open the AddImage modal
+          openAddImageModal()
+          // You can use a modal library or your custom modal logic here
+        }
+      }, [openAddimage, imageId]);
+
 
     const closeCarouselModal = () => {
         setShowCarouselModal(false);

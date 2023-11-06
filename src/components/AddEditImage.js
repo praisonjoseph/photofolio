@@ -16,11 +16,6 @@ export default function AddImage({ album, albumId,
   const [name, setName] = useState('')
   const [file, setFile] = useState(null)
   const [error, setError] = useState('')
-  const {
-    // openAddimage,
-    // setOpenAddImage, 
-    // imageId 
-  } = useImage(albumId)
 
   const getSingleImage = async () => {
     const docRef = doc(database.images, imageId)
@@ -33,6 +28,11 @@ export default function AddImage({ album, albumId,
   useEffect(() => {
     imageId && getSingleImage()
   },[imageId])
+
+  useEffect(() => {
+    console.log("changed")
+  }, [openAddimage]);
+
 
   const closeModal = () => {
     setOpenAddImage(false)

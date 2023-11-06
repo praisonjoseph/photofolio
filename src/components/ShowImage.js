@@ -14,10 +14,7 @@ export default function ShowImage({
     }) {
         
     const [currentHoverIndex, setcurrentHoverIndex] = useState(null);
-    const {
-        // setSelectedImageIndex, 
-        // setShowCarouselModal 
-    } = useImage(albumId)
+
     const handleDelete = async (imageId) => {
         await deleteDoc(doc(database.images, imageId));
     };

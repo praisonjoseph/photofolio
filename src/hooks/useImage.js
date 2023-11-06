@@ -3,11 +3,6 @@ import { onSnapshot, query, orderBy, where } from "firebase/firestore";
 import { database } from '../firebase';
 import { imageListReducer, 
     initialImageState, 
-    SET_OPEN_ADD_IMAGE,
-    SET_SELECTED_IMAGE_INDEX,
-    SET_IMAGE_ID,
-    SET_SHOW_CAROUSEL_MODAL,
-    SET_SEARCH_TERM,
     SET_IMAGES,
     SET_IMAGE_LOADING,
 
@@ -46,28 +41,5 @@ export const useImage = (albumId = null) => {
     dispatch({ type: SET_IMAGE_LOADING, payload: isTrue });
   }
 
-  // const setSelectedImageIndex = (index) => {
-  //   dispatch({ type: SET_SELECTED_IMAGE_INDEX, payload: index });
-  // };
-
-  const setOpenAddImage = (isOpen) => {
-    dispatch({ type: SET_OPEN_ADD_IMAGE, payload: isOpen });
-  };
-
-  // const setImageId = (imageId) => {
-  //   dispatch({ type: SET_IMAGE_ID, payload: imageId });
-  // }
-  // const setShowCarouselModal = (isOpen) => {
-  //   dispatch({ type: SET_SHOW_CAROUSEL_MODAL, payload: isOpen });
-  // }
-  const setSearchTerm = (value) => {
-    dispatch({ type: SET_SEARCH_TERM, payload: value });
-  }
-  return {...state, 
-    // setSelectedImageIndex,
-    setOpenAddImage,
-    // setImageId,
-    // setShowCarouselModal,
-    setSearchTerm,
- };
+  return {...state };
 };
