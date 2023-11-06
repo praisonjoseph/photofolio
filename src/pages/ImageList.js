@@ -32,15 +32,6 @@ export default function ImageList() {
         setOpenAddImage(true)
     }
 
-    useEffect(() => {
-        if (openAddimage) {
-          // Open the AddImage modal
-          openAddImageModal()
-          // You can use a modal library or your custom modal logic here
-        }
-      }, [openAddimage, imageId]);
-
-
     const closeCarouselModal = () => {
         setShowCarouselModal(false);
     };

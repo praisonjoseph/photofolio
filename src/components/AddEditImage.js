@@ -29,11 +29,6 @@ export default function AddImage({ album, albumId,
     imageId && getSingleImage()
   },[imageId])
 
-  useEffect(() => {
-    console.log("changed")
-  }, [openAddimage]);
-
-
   const closeModal = () => {
     setOpenAddImage(false)
     setFile(null)
