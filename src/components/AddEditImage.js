@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFileUpload } from '@fortawesome/free-solid-svg-icons'
 import { database, storage } from '../firebase';
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL, getMetadata } from "firebase/storage";
 import { addDoc, getDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
 import { Button, Form, Modal, Row, Col, Alert } from 'react-bootstrap'
 import { useImage } from '../hooks/useImage'
 
-export default function AddImage({ album, albumId, 
-              openAddimage, 
-              setOpenAddImage,
-              imageId
-  }) {
+export default function AddImage({ album, albumId,
+  openAddimage,
+  setOpenAddImage,
+  imageId
+}) {
 
   const [name, setName] = useState('')
   const [file, setFile] = useState(null)
@@ -27,13 +27,29 @@ export default function AddImage({ album, albumId,
   }
   useEffect(() => {
     imageId && getSingleImage()
-  },[imageId])
+  }, [imageId])
 
   const closeModal = () => {
     setOpenAddImage(false)
     setFile(null)
     setName('')
     setError('')
+  }
+
+  async function checkImageExists(storageRef) {
+    try {
+      const metadata = await getMetadata(storageRef);
+      // console.log(metadata)
+      return true;
+    } catch (error) {
+      console.error('An error occurred:', error);
+      // You can handle the error here or re-throw it if needed
+      if (error.code === 'storage/object-not-found') {
+        return false; // File does not exist
+      } else {
+        throw error; // Re-throw the error for further handling
+      }
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -45,6 +61,19 @@ export default function AddImage({ album, albumId,
     }
     // const fileName = file.name + new Date().getTime()
     const storageRef = ref(storage, `/images/${album.name}/${file.name}`);
+    // if imageid and checkiffileexists in storage
+
+    checkImageExists(storageRef)
+      .then((exists) => {
+        if (exists) {
+          console.log('File exists.');
+        } else {
+          console.log('File does not exist.');
+        }
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error);
+      });
     const uploadTask = uploadBytesResumable(storageRef, file);
     uploadTask.on('state_changed',
       (snapshot) => {
@@ -71,22 +100,18 @@ export default function AddImage({ album, albumId,
         getDownloadURL(uploadTask.snapshot.ref)
           .then(async (downloadURL) => {
             console.log('File available at', downloadURL);
+            const imageData = {
+              name: name,
+              albumId: album.id,
+              url: downloadURL,
+              createdAt: serverTimestamp()
+            }
             if (!imageId) {
-              await addDoc(database.images, {
-                name: name,
-                albumId: album.id,
-                url: downloadURL,
-                createdAt: serverTimestamp()
-              });
+              await addDoc(database.images, imageData);
 
             } else {
               const docRef = doc(database.images, imageId)
-              await updateDoc(docRef, {
-                name: name,
-                albumId: album.id,
-                url: downloadURL,
-                createdAt: serverTimestamp()
-              });
+              await updateDoc(docRef, imageData);
             }
 
           })
