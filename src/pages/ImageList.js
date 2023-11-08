@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import AddEditmage from '../components/AddEditImage'
+// import AddEditmage from '../components/AddEditImage'
+import AddEditmage from '../components/AddEditImageModal'
 import { Link, useParams, useLocation } from 'react-router-dom'
 import { Button, Stack, Form, Spinner } from 'react-bootstrap'
 import { useImage } from '../hooks/useImage'
