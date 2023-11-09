@@ -7,6 +7,7 @@ import { ref, uploadBytesResumable, getDownloadURL, getMetadata } from "firebase
 import { addDoc, getDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
 import { Button, Form, Modal, Row, Col, Alert } from 'react-bootstrap'
 import { useImage } from '../hooks/useImage'
+import { getImageURLonUpload } from '../utility/firebasestorage';
 
 export default function AddImage({ album, albumId,
     openAddimage,
@@ -17,7 +18,8 @@ export default function AddImage({ album, albumId,
     const [name, setName] = useState('')
     const [file, setFile] = useState(null)
     const [error, setError] = useState('')
-    const [progress, setProgress] = useState(null)
+    const [progress, setProgress] = useState(0)
+    const {addImage, editImageName} = useImage(albumId)
 
     const getSingleImage = async () => {
         const docRef = doc(database.images, imageId)
@@ -31,27 +33,16 @@ export default function AddImage({ album, albumId,
         imageId && getSingleImage()
     }, [imageId])
 
+    useEffect(() => {
+        // Do something with the progress state, e.g., display it in your component
+        console.log(`Upload progress: ${progress}%`);
+      }, [progress]);
 
     const closeModal = () => {
         setOpenAddImage(false)
         setFile(null)
         setName('')
         setError('')
-    }
-
-    const checkImageExistsinStorage = async (storageRef) => {
-        try {
-            const metadata = await getMetadata(storageRef);
-            return true;
-        } catch (error) {
-            console.error('An error occurred:', error);
-            // You can handle the error here or re-throw it if needed
-            if (error.code === 'storage/object-not-found') {
-                return false; // File does not exist
-            } else {
-                throw error; // Re-throw the error for further handling
-            }
-        }
     }
 
     const updateDatabase = async (downloadURL) => {
@@ -65,11 +56,10 @@ export default function AddImage({ album, albumId,
             }
             if (!imageId) {
                 console.log('adding doc to database')
-                await addDoc(database.images, imageData);
+                addImage(imageData)
             } else {
                 console.log('updating doc to database', imageId)
-                const docRef = doc(database.images, imageId)
-                await updateDoc(docRef, imageData);
+                editImageName(imageData, imageId)
             }
         } catch (error) {
             console.error('Error updating the database:', error);
@@ -78,58 +68,26 @@ export default function AddImage({ album, albumId,
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        // Create a album in the database
+
         if (albumId == null || file == null) {
             setError("Please select a file to upload")
             return
         }
-        // const fileName = file.name + new Date().getTime()
-        const storageRef = ref(storage, `/images/${album.name}/${file.name}`);
         try {
-            const exists = await checkImageExistsinStorage(storageRef);
-            if (exists) {
-                console.log('File exists in Firebase Storage.');
-                // Get the download URL for the existing image
-                const downloadURL = await getDownloadURL(storageRef);
-                console.log('File available at', downloadURL);
+            //Add image to firebase storage
+            const downloadURL = await getImageURLonUpload(album, file, setProgress)
+            console.log('Upload successful. Download URL:', downloadURL);
+            //Add/Edit image details on firestore database
+            updateDatabase(downloadURL);
+          } catch (error) {
+            console.error('Upload failed:', error);
+          }
 
-                // Update the database and close the modal
-                updateDatabase(downloadURL);
-            } else {
-                console.log('File does not exist in Firebase Storage.');
-                // Upload the new image to Firebase Storage
-                const uploadTask = uploadBytesResumable(storageRef, file);
-                // Listen for state changes on the upload task
-                uploadTask.on('state_changed',
-                    (snapshot) => {
-                        // Handle progress or other state changes here
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                        setProgress(progress);
-                    },
-                    (error) => {
-                        // Handle errors during upload
-                        console.error('Upload error:', error);
-                    },
-                    async () => {
-                        // Handle successful uploads on complete
-
-                        // Get the download URL for the newly uploaded image
-                        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-                        console.log('File available at', downloadURL);
-
-                        // Update the database and close the modal
-                        updateDatabase(downloadURL);
-                    }
-                );
-            }
-        } catch (error) {
-            console.error('An error occurred:', error);
-        }
- 
         setName('')
         setFile(null)
         closeModal()
     }
+
     return (
         <Modal show={openAddimage} onHide={closeModal}>
             <Form onSubmit={handleSubmit}>
