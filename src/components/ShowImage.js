@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import EditImage from "../images/edit.png";
 import DeleteImage from "../images/trash-bin.png";
 import styles from "./ShowImage.module.css"
 import { Link } from 'react-router-dom'
-import { doc, deleteDoc } from "firebase/firestore";
-import { database } from '../firebase';
 import { useImage } from '../hooks/useImage'
+
 
 export default function ShowImage({ 
             image, index, albumId, album, openAddImageModal,
@@ -13,14 +12,17 @@ export default function ShowImage({
             setShowCarouselModal 
     }) {
         
+    const {deleteImage} = useImage(albumId)
     const [currentHoverIndex, setcurrentHoverIndex] = useState(null);
 
     const handleDelete = async (imageId) => {
-        await deleteDoc(doc(database.images, imageId));
+        deleteImage(imageId).then((isdeleted) => {
+            console.log('is deleted', isdeleted)
+        })
+        
     };
 
     const handleEditClick = (imageId) => {
-        console.log("clicked")
         openAddImageModal(imageId)
     };
     const imageStyles = {
