@@ -8,6 +8,7 @@ import { addDoc, getDoc, updateDoc, doc, serverTimestamp } from "firebase/firest
 import { Button, Form, Modal, Row, Col, Alert } from 'react-bootstrap'
 import { useImage } from '../hooks/useImage'
 import { getImageURLonUpload } from '../utility/firebasestorage';
+import { editImageStorage } from '../utility/firebasestorage';
 
 export default function AddImage({ album, albumId,
     openAddimage,
@@ -19,7 +20,7 @@ export default function AddImage({ album, albumId,
     const [file, setFile] = useState(null)
     const [error, setError] = useState('')
     const [progress, setProgress] = useState(0)
-    const {addImage, editImageName} = useImage(albumId)
+    const { addImage, editImage } = useImage(albumId)
 
     const getSingleImage = async () => {
         const docRef = doc(database.images, imageId)
@@ -36,7 +37,7 @@ export default function AddImage({ album, albumId,
     useEffect(() => {
         // Do something with the progress state, e.g., display it in your component
         console.log(`Upload progress: ${progress}%`);
-      }, [progress]);
+    }, [progress]);
 
     const closeModal = () => {
         setOpenAddImage(false)
@@ -44,27 +45,6 @@ export default function AddImage({ album, albumId,
         setName('')
         setError('')
     }
-
-    const updateDatabase = async (downloadURL) => {
-        try {
-            // Update the image document in the database
-            const imageData = {
-                name: name,
-                albumId: albumId,
-                url: downloadURL,
-                createdAt: serverTimestamp()
-            }
-            if (!imageId) {
-                console.log('adding doc to database')
-                addImage(imageData)
-            } else {
-                console.log('updating doc to database', imageId)
-                editImageName(imageData, imageId)
-            }
-        } catch (error) {
-            console.error('Error updating the database:', error);
-        }
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -74,14 +54,35 @@ export default function AddImage({ album, albumId,
             return
         }
         try {
-            //Add image to firebase storage
-            const downloadURL = await getImageURLonUpload(album, file, setProgress)
-            console.log('Upload successful. Download URL:', downloadURL);
+            const filePath = `/images/${album.name}/`
+            console.log('filePath in addeidtimage', filePath)
+            const imageData = {
+                name: name,
+                albumId: albumId,
+                url: null,
+                createdAt: serverTimestamp()
+            }
+            if (!imageId) {
+                //Add image to firebase storage
+                const downloadURL = await getImageURLonUpload(file, filePath, file.name, setProgress)
+                console.log('Upload successful. Download URL:', downloadURL);
+                console.log('adding doc to database')
+                imageData.url = downloadURL
+                addImage(imageData)
+            } else {
+
+                const downloadURL = await editImageStorage(imageId, file, filePath, file.name, setProgress)
+                console.log('Edit Image successful. Download URL:', downloadURL);
+                console.log('updating doc to database', imageId)
+                imageData.url = downloadURL
+                editImage(imageData, imageId)
+            }
+
             //Add/Edit image details on firestore database
-            updateDatabase(downloadURL);
-          } catch (error) {
+            // updateDatabase(downloadURL);
+        } catch (error) {
             console.error('Upload failed:', error);
-          }
+        }
 
         setName('')
         setFile(null)

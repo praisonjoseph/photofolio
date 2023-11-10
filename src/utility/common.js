@@ -1,5 +1,5 @@
-export const extractPathfromURL = (imageData) => {
-    const pathFromURL = new URL(imageData.url).pathname;
+export const extractPathfromURL = (imageDataUrl) => {
+    const pathFromURL = new URL(imageDataUrl).pathname;
     const searchString = "/images"
     const startIndex = pathFromURL.indexOf(searchString);
     if (startIndex !== -1) {

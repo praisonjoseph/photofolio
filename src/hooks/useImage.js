@@ -50,23 +50,13 @@ export const useImage = (albumId = null) => {
         dispatch({ type: ADD_IMAGE, payload: { id: docRef.id, ...newImage } });
       });
   };
-  const editImageName = (editedImage, imageId) => {
+  const editImage = (editedImage, imageId) => {
     const docRef = doc(database.images, imageId)
     updateDoc(docRef, editedImage)
       .then(() => {
         dispatch({ type: EDIT_IMAGE, payload: editedImage });
       })
   };
-
-  // const deleteImage = (imageId) => {
-  //   const docRef = doc(database.images, imageId)
-  //   deleteDoc(docRef)
-  //     .then(() => {
-  //       dispatch({ type: DELETE_IMAGE, payload: imageId });
-  //     })
-  // };
-
-
 
   async function deleteImage(imageId) {
     try {
@@ -79,7 +69,7 @@ export const useImage = (albumId = null) => {
         const imageData = imageSnapshot.data();
         if (imageData && imageData.url) {
           // Extract the path from the URL to construct the Storage reference
-          const decodedpathURL = extractPathfromURL(imageData)
+          const decodedpathURL = extractPathfromURL(imageData.url)
           if (decodedpathURL !== null) {
             console.log(decodedpathURL); 
             // Delete the image from Firebase storage
@@ -110,5 +100,5 @@ export const useImage = (albumId = null) => {
     dispatch({ type: SET_IMAGE_LOADING, payload: isTrue });
   }
 
-  return { ...state, addImage, editImageName, deleteImage };
+  return { ...state, addImage, editImage, deleteImage };
 };
